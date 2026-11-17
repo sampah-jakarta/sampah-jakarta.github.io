@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pengelolaan Sampah Jakarta</title>
+  <meta name="description" content="Kajian arahan kebijakan pengelolaan sampah DKI Jakarta 2026–2045.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="home">
+
+  <nav class="topnav" aria-label="Navigasi utama">
+    <a class="site-title" href="index.html"><span class="dot"></span>SAMPAH JAKARTA</a>
+    <button class="nav-toggle" aria-label="Buka menu" aria-expanded="false">☰</button>
+    <div class="topnav-links">
+      <a class="active" href="index.html">Beranda</a>
+      <a href="timbulan.html">Timbulan</a>
+      <a href="infrastruktur.html">Infrastruktur</a>
+      <a href="simulasi.html">Simulasi</a>
+      <a href="pembiayaan.html">Pembiayaan</a>
+      <a href="dampak.html">Dampak</a>
+      <a href="tentang.html">Tentang</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-text">
+      <p class="eyebrow">Kajian Pengelolaan Sampah DKI Jakarta 2026–2045</p>
+      <h1>Pengelolaan Sampah Jakarta<br><span class="hl">Pasca-Pembatasan Bantargebang</span></h1>
+      <p class="lead">Jakarta menghasilkan sekitar 9.059 ton sampah per hari, dan sebagian besar masih dikirim ke
+        TPST Bantargebang. Kajian ini memetakan kondisi saat ini, menyimulasikan dampak jika pengiriman ke
+        Bantargebang dibatasi, dan membandingkan pilihan kebijakan hingga 2045.</p>
+      <div class="hero-buttons">
+        <a class="btn btn-primary" href="simulasi.html">Buka simulasi</a>
+        <a class="btn btn-ghost" href="#cerita">Ringkasan temuan ↓</a>
+      </div>
+    </div>
+    <p class="credit">TPA di Jawa Barat · Foto: <a href="https://www.pexels.com/photo/aerial-footage-of-landfill-on-shore-5441305/" target="_blank" rel="noopener">Tom Fisk / Pexels</a></p>
+  </header>
+
+  <!-- STAT CARDS -->
+  <section class="stats" aria-label="Angka kunci">
+    <article class="stat">
+      <p class="stat-num">9.059</p>
+      <p class="stat-unit">ton/hari</p>
+      <p class="stat-label">Timbulan sampah</p>
+    </article>
+    <article class="stat stat-alert">
+      <p class="stat-num">7,55%</p>
+      <p class="stat-unit">684 ton/hari</p>
+      <p class="stat-label">Sampah yang diolah</p>
+    </article>
+    <article class="stat">
+      <p class="stat-num">24 hari</p>
+      <p class="stat-unit">skenario BAU</p>
+      <p class="stat-label">Waktu hingga seluruh kelurahan kritis</p>
+    </article>
+    <article class="stat">
+      <p class="stat-num">Rp 17,7 T</p>
+      <p class="stat-unit">per tahun (2026)</p>
+      <p class="stat-label">Estimasi kerugian jika tidak ditangani</p>
+    </article>
+  </section>
+
+  <!-- SCROLLYTELLING -->
+  <section id="cerita" class="story">
+    <div class="story-graphic" aria-hidden="true">
+      <div id="map" class="graphic-layer"></div>
+      <div id="chart" class="graphic-layer"></div>
+      <div id="legend" class="legend"></div>
+    </div>
+
+    <div class="story-steps">
+      <div class="step" data-step="timbulan">
+        <div class="card">
+          <p class="step-no">01 · Timbulan</p>
+          <h2>Sebaran timbulan per kelurahan</h2>
+          <p>Timbulan dihitung dari jumlah penduduk (10,7 juta jiwa ditambah 1,25 juta komuter) dengan
+            koefisien <b>0,76 kg/orang/hari</b>. Kelurahan dengan penduduk terbanyak, sebagian besar di
+            Jakarta Timur dan Jakarta Barat, menghasilkan timbulan tertinggi.</p>
+        </div>
+      </div>
+
+      <div class="step" data-step="komposisi">
+        <div class="card">
+          <p class="step-no">02 · Komposisi</p>
+          <h2>Komposisi dan kapasitas olah</h2>
+          <p>Sampah organik mencakup <b>49,9%</b> dari total timbulan, tetapi kapasitas pengolahannya baru
+            <b>3,5%</b> dari kebutuhan. Untuk anorganik, kapasitasnya <b>14,4%</b>. Kesenjangan terbesar
+            ada pada sampah organik.</p>
+        </div>
+      </div>
+
+      <div class="step" data-step="fasilitas">
+        <div class="card">
+          <p class="step-no">03 · Infrastruktur</p>
+          <h2>Fasilitas yang ada</h2>
+          <p>Saat ini tercatat <b data-k="n_tps">1.209 TPS</b>, <b data-k="n_bs">1.722 bank sampah</b>, dan
+            <b data-k="n_tps3r">30 TPS 3R</b>. Sebagian besar TPS berfungsi sebagai tempat penampungan
+            sementara sebelum sampah diangkut, bukan tempat pengolahan.</p>
+        </div>
+      </div>
+
+      <div class="step" data-step="hari1">
+        <div class="card">
+          <p class="step-no">04 · Simulasi</p>
+          <h2>Hari pertama pembatasan</h2>
+          <p>Simulasi mengasumsikan sampah yang tidak terolah di tingkat kelurahan tidak lagi bisa dikirim
+            ke Bantargebang. Dengan kapasitas yang ada sekarang (skenario BAU), <b data-k="k1">172</b>
+            kelurahan berstatus <span class="tag tag-kritis">KRITIS</span> pada hari pertama.</p>
+        </div>
+      </div>
+
+      <div class="step" data-step="hari14">
+        <div class="card">
+          <p class="step-no">05 · Simulasi</p>
+          <h2>Hari ke-14</h2>
+          <p>Pada hari ke-14 jumlahnya menjadi <b data-k="k14">235</b> dari 267 kelurahan (88%). Kelurahan yang
+            tetap <span class="tag tag-aman">AMAN</span> adalah kelurahan yang kapasitas olah lokalnya sudah
+            mencukupi timbulan hariannya.</p>
+        </div>
+      </div>
+
+      <div class="step" data-step="proyeksi">
+        <div class="card">
+          <p class="step-no">06 · Proyeksi 2026–2045</p>
+          <h2>Kapasitas dan timbulan ke depan</h2>
+          <p>Tanpa intervensi tambahan, kapasitas pengolahan masih di bawah timbulan sampai 2045. Skenario
+            moderat diperkirakan menghemat sekitar <b>Rp 117 T</b> secara kumulatif, dengan rasio
+            manfaat-biaya <b>3,4</b>.</p>
+          <a class="btn btn-primary btn-sm" href="simulasi.html">Bandingkan skenario</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPLORE -->
+  <section class="explore">
+    <h2>Halaman lainnya</h2>
+    <p class="section-lead">Data lengkap, peta, dan simulasi per topik.</p>
+    <div class="explore-grid">
+      <a class="explore-card" href="timbulan.html">
+        <div class="explore-img img-timbulan"></div>
+        <div class="explore-body"><h3>Timbulan</h3><p>Sebaran timbulan per kelurahan, komposisi, dan tren bulanan.</p><span>Lihat data</span></div>
+      </a>
+      <a class="explore-card" href="infrastruktur.html">
+        <div class="explore-img img-infra"></div>
+        <div class="explore-body"><h3>Infrastruktur</h3><p>Lokasi TPS, TPS 3R, bank sampah, dan fasilitas pengolahan.</p><span>Buka peta</span></div>
+      </a>
+      <a class="explore-card" href="simulasi.html">
+        <div class="explore-img img-sim"></div>
+        <div class="explore-body"><h3>Simulasi</h3><p>Proyeksi 2026–2045 dan status kelurahan per hari dengan kombinasi intervensi.</p><span>Buka simulasi</span></div>
+      </a>
+      <a class="explore-card" href="pembiayaan.html">
+        <div class="explore-img img-biaya"></div>
+        <div class="explore-body"><h3>Pembiayaan</h3><p>Kebutuhan anggaran ±Rp 10,6 T dan sumber pendanaan potensial.</p><span>Lihat pembiayaan</span></div>
+      </a>
+      <a class="explore-card" href="dampak.html">
+        <div class="explore-img img-dampak"></div>
+        <div class="explore-body"><h3>Dampak</h3><p>Kerugian kesehatan, lingkungan, dan produktivitas jika tidak ditangani.</p><span>Lihat dampak</span></div>
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p><b>Beyond Bantargebang</b> — Kajian Arahan Kebijakan Pengelolaan Sampah DKI Jakarta Pasca-Pembatasan TPST Bantargebang.</p>
+    <p class="small">Sumber: DLH DKI Jakarta (2026); SIPSN (2024); Paparan Kepala DLH, Zero Open Dumping (Juli 2026);
+      BPS, UNFPA &amp; Bappenas (proyeksi penduduk); DLH–Bappeda DKI (estimasi biaya). Seluruh angka bersifat estimasi
+      untuk perencanaan kebijakan.</p>
+  </footer>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
