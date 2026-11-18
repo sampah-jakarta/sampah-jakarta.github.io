@@ -338,3 +338,44 @@ h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; }
 @media (max-width: 520px) { .sken-grid, .target-grid { grid-template-columns: 1fr; } .komp-total { grid-template-columns: 1fr; } }
 .sken-panel { margin-top: -80px; position: relative; z-index: 2; }
 @media (max-width: 760px) { .panel-head-row { flex-direction: column; } .preset-row { margin-bottom: 12px; } }
+
+/* ---------- Pembiayaan ---------- */
+.sken-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.harga-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.harga-table th { text-align: left; font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); padding: 0 8px 8px 0; border-bottom: 1px solid var(--line); }
+.harga-table td { padding: 10px 8px 10px 0; border-bottom: 1px solid var(--line); }
+.harga-table td.muted { color: var(--muted); font-size: 12.5px; }
+.harga-val { font-weight: 700; color: var(--navy); text-align: right; white-space: nowrap; }
+.fund-grid { display: grid; grid-template-columns: 220px 1fr; gap: 24px; align-items: center; }
+.fund-grid .donut { max-height: 220px; }
+.dana-list { display: flex; flex-direction: column; }
+.dana-row { display: grid; grid-template-columns: 12px 1fr 44px 84px; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+.dana-row i { width: 10px; height: 10px; border-radius: 3px; }
+.dana-row em { font-style: normal; color: var(--muted); text-align: right; }
+.dana-row b { text-align: right; color: var(--navy); font-variant-numeric: tabular-nums; }
+.alokasi { display: flex; flex-direction: column; gap: 16px; }
+.alok-title { margin: 0 0 6px; font-weight: 600; color: var(--navy); font-size: 14px; }
+.alok-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; background: #EEF2F6; }
+.alok-bar span { height: 100%; }
+.alok ul { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; }
+.alok li { display: grid; grid-template-columns: 10px auto 1fr; gap: 4px 8px; align-items: baseline; }
+.alok li i { width: 8px; height: 8px; border-radius: 2px; }
+.alok li small { grid-column: 3; color: var(--muted); }
+.skema-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.skema-card { border: 1px solid var(--line); border-top: 4px solid; border-radius: 12px; padding: 16px; }
+.skema-card h3 { font-size: 15px; margin: 10px 0 6px; color: var(--navy); }
+.skema-card p { margin: 0; font-size: 13px; color: var(--ink); line-height: 1.55; }
+.donor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.donor-card { border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+.donor-org { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--orange); }
+.donor-card h3 { font-size: 15px; margin: 0; color: var(--navy); }
+.donor-amt { margin: 0; font-weight: 600; font-size: 13.5px; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { font-size: 11px; background: var(--blue-light); color: var(--navy); border-radius: 999px; padding: 2px 9px; }
+.donor-desc { margin: 0; font-size: 12.5px; color: var(--muted); flex: 1; }
+.donor-card a { font-size: 13px; font-weight: 600; }
+@media (max-width: 1000px) { .skema-grid, .donor-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 760px) {
+  .sken-grid-3, .skema-grid, .donor-grid, .fund-grid { grid-template-columns: 1fr; }
+  .fund-grid .donut { max-width: 220px; margin: 0 auto; }
+}

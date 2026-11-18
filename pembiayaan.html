@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pembiayaan — Sampah Jakarta</title>
+  <meta name="description" content="Estimasi kebutuhan anggaran pengelolaan sampah Jakarta 2025–2045, komposisi sumber dana, dan katalog donor.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+
+  <nav class="topnav" aria-label="Navigasi utama">
+    <a class="site-title" href="index.html"><span class="dot"></span>SAMPAH JAKARTA</a>
+    <button class="nav-toggle" aria-label="Buka menu" aria-expanded="false">☰</button>
+    <div class="topnav-links">
+      <a href="index.html">Beranda</a>
+      <a href="timbulan.html">Timbulan</a>
+      <a href="infrastruktur.html">Infrastruktur</a>
+      <a href="simulasi.html">Simulasi</a>
+      <a class="active" href="pembiayaan.html">Pembiayaan</a>
+      <a href="dampak.html">Dampak</a>
+      <a href="tentang.html">Tentang</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <p class="eyebrow">Mekanisme pembiayaan</p>
+    <h1>Kebutuhan anggaran 2025–2045</h1>
+    <p class="lead">Estimasi biaya per periode RPJMD menurut skenario, komposisi sumber dana, dan program pendanaan internasional yang relevan.</p>
+  </header>
+
+  <main class="page-body">
+    <section class="panel sken-panel" aria-label="Pengaturan skenario">
+      <div class="panel-head panel-head-row">
+        <div><h2>Skenario intervensi</h2><p>Tiga intervensi yang memengaruhi biaya. Pengaturan RDF dan PSEL tidak mengubah biaya di model ini.</p></div>
+        <div class="preset-row">
+          <span>Preset:</span>
+          <button class="btn-chip" data-preset="eksisting">Eksisting</button>
+          <button class="btn-chip" data-preset="minimum">Minimum</button>
+          <button class="btn-chip" data-preset="moderat">Moderat</button>
+          <button class="btn-chip" data-preset="maksimum">Maksimum</button>
+        </div>
+      </div>
+      <div id="sken-grid" class="sken-grid sken-grid-3"></div>
+    </section>
+
+    <section class="stats stats-page stats-sim" aria-label="Ringkasan biaya">
+      <article class="stat"><p class="stat-num" data-k="total">–</p><p class="stat-unit">2025–2045</p><p class="stat-label">Total kebutuhan</p></article>
+      <article class="stat" style="border-top-color:#7FB3E3"><p class="stat-num" style="color:#16334E" data-k="ops">–</p><p class="stat-unit" data-k="ops_pct">–</p><p class="stat-label">Operasional RDF + FPSA</p></article>
+      <article class="stat" style="border-top-color:#0B2A5B"><p class="stat-num" data-k="apbd">–</p><p class="stat-unit" data-k="apbd_pct">–</p><p class="stat-label">Ditanggung APBD</p></article>
+      <article class="stat stat-warn"><p class="stat-num" data-k="gap">–</p><p class="stat-unit" data-k="gap_pct">–</p><p class="stat-label">Perlu sumber lain</p></article>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <div class="panel-head"><h2>Kebutuhan anggaran per periode</h2><p>Miliar rupiah, per komponen biaya.</p></div>
+        <ul class="line-legend" id="bar-legend"></ul>
+        <div id="anggaran" class="proj-plot"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head"><h2>Asumsi harga satuan</h2><p>Estimasi DLH–Bappeda 2026.</p></div>
+        <table class="harga-table" id="harga"></table>
+        <p class="source-note">RDF Rorotan: realisasi APBD 2026 Rp 133 miliar (fase ramp-up, belum kapasitas penuh).</p>
+      </article>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <div class="panel-head"><h2>Komposisi sumber pendanaan</h2>
+          <p>Setiap komponen biaya dibagi ke sumber dana menurut preseden, jadi komposisinya ikut bergeser saat skenario diubah.</p></div>
+        <div class="fund-grid"><div id="donut-dana" class="donut"></div><div id="dana-list" class="dana-list"></div></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head"><h2>Dasar alokasi</h2><p>Pembagian tiap komponen biaya ke sumber dana.</p></div>
+        <div id="alokasi" class="alokasi"></div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Skema pembiayaan</h2><p>Enam sumber dana dan perannya.</p></div>
+      <div id="skema" class="skema-grid"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head panel-head-row">
+        <div><h2>Program pendanaan internasional</h2><p>Program di bidang pengelolaan sampah dan ekonomi sirkular yang relevan untuk Jakarta.</p></div>
+        <select id="donor-filter" class="select" aria-label="Filter tipe program"><option value="">Semua tipe</option></select>
+      </div>
+      <div id="donor" class="donor-grid"></div>
+    </section>
+
+    <p class="source-note">Estimasi biaya berdasarkan harga satuan DLH–Bappeda 2026. Komponen biaya: infrastruktur (upgrade TPS, unit bank
+      sampah baru), operasional (RDF Rorotan, FPSA), pembinaan BSU, serta monev dan koordinasi OPD (3% dari total). Realisasi
+      bergantung pada mekanisme KPBU, kondisi pasar, dan keputusan anggaran daerah.</p>
+  </main>
+
+  <footer class="footer">
+    <p><b>Sampah Jakarta</b> — Kajian Arahan Kebijakan Pengelolaan Sampah DKI Jakarta Pasca-Pembatasan TPST Bantargebang.</p>
+    <p class="small">Seluruh angka bersifat estimasi untuk perencanaan kebijakan.</p>
+  </footer>
+
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/sim.js"></script>
+  <script src="js/skenario.js"></script>
+  <script src="js/pembiayaan.js"></script>
+</body>
+</html>
