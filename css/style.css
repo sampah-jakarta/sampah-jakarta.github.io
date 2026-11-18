@@ -286,3 +286,55 @@ h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; }
   .kap-badge-cell { text-align: left; }
   .wilayah-grid, .stats-5 { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ---------- Simulasi ---------- */
+.preset-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.sken-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.sken-card { border: 1px solid var(--line); border-radius: 12px; padding: 14px 14px 12px; display: flex; flex-direction: column; }
+.sken-title { margin: 0 0 10px; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--navy); }
+.sken-no { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 11px; flex: none; }
+.range { width: 100%; accent-color: var(--orange); margin: 0; }
+.sken-ticks, .range-ends { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+.sken-level { margin: 10px 0 0; font-weight: 700; font-size: 14px; color: var(--orange); }
+.sken-desc { margin: 2px 0 0; font-size: 12px; color: var(--muted); line-height: 1.45; }
+.stats-sim { margin-top: 0; }
+.sim-map-layout { display: grid; grid-template-columns: 1fr 280px; gap: 20px; }
+.sim-side { display: flex; flex-direction: column; gap: 10px; }
+.status-counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.sc { border-radius: 12px; padding: 12px 8px; text-align: center; color: #fff; }
+.sc b { display: block; font-size: 26px; line-height: 1.1; }
+.sc span { font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.sc-aman { background: var(--aman); } .sc-siaga { background: var(--siaga); } .sc-kritis { background: var(--kritis); }
+.play-row { display: flex; gap: 8px; align-items: center; }
+.play-row .btn { margin: 0; }
+.sim-interp { margin: 4px 0 0; font-size: 13px; line-height: 1.6; background: var(--blue-light); border-radius: 10px; padding: 12px 14px; }
+.grid-proj { grid-template-columns: 1.6fr 1fr; }
+.proj-plot { height: 380px; }
+.target-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.target { border: 1px solid var(--line); border-left: 4px solid var(--navy); border-radius: 12px; padding: 14px 16px; }
+.target.t-ok { border-left-color: var(--aman); } .target.t-bad { border-left-color: var(--kritis); }
+.t-label { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.t-val { margin: 4px 0 2px; font-size: 20px; font-weight: 700; color: var(--navy); }
+.t-ok .t-val { color: var(--aman); } .t-bad .t-val { color: var(--kritis); }
+.t-note { margin: 0; font-size: 12px; color: var(--muted); }
+.komp-sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.fbars { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.fbar { display: grid; grid-template-columns: 110px 1fr 60px; gap: 12px; align-items: center; font-size: 13.5px; }
+.fbar b { text-align: right; font-variant-numeric: tabular-nums; }
+.komp-total { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+.komp-total div { background: #F4F7FB; border-radius: 10px; padding: 10px 12px; }
+.komp-total span { display: block; font-size: 11.5px; color: var(--muted); }
+.komp-total b { font-size: 18px; color: var(--navy); } .komp-total b.red { color: var(--kritis); }
+.asumsi { display: flex; flex-direction: column; gap: 8px; }
+.asumsi-item { border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+.asumsi-item summary { cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--navy); }
+.asumsi-item ul { margin: 10px 0 2px; padding-left: 18px; font-size: 13px; color: var(--ink); display: flex; flex-direction: column; gap: 6px; }
+@media (max-width: 1100px) { .sken-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) {
+  .sim-map-layout, .grid-proj, .komp-sim-grid { grid-template-columns: 1fr; }
+  .sken-grid { grid-template-columns: 1fr 1fr; }
+  .stats-sim { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) { .sken-grid, .target-grid { grid-template-columns: 1fr; } .komp-total { grid-template-columns: 1fr; } }
+.sken-panel { margin-top: -80px; position: relative; z-index: 2; }
+@media (max-width: 760px) { .panel-head-row { flex-direction: column; } .preset-row { margin-bottom: 12px; } }

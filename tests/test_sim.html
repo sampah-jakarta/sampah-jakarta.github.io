@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="utf-8"><title>Uji paritas simulasi</title>
+<style>body{font:14px system-ui,sans-serif;margin:32px;color:#16334E}pre{background:#F4F7FB;padding:12px;border-radius:8px;white-space:pre-wrap}.ok{color:#2E7D32}.bad{color:#C0392B}</style></head>
+<body>
+<h1>Uji paritas js/sim.js terhadap hasil simulasi R</h1>
+<p>Buka lewat server lokal (preview <code>static-site</code>, lalu <code>/tests/test_sim.html</code>).
+Butuh kunci jawaban di <code>tests/golden/</code> (dibuat <code>scripts/export_static_data.py golden</code>; tidak ikut di-commit).</p>
+<p id="status">Menjalankan…</p>
+<pre id="log"></pre>
+<script src="../js/sim.js"></script>
+<script>
+// jsonlite (plumber) membulatkan angka ke 4 desimal saat serialisasi
+const close = (a, b) => (a == null || b == null) ? a == b : Math.abs(a - b) <= 1e-4 * Math.max(1, Math.abs(b)) + 5e-5;
+const un = (v) => (Array.isArray(v) ? (v[0] ?? null) : (v ?? null));
+const log = (s) => { document.getElementById('log').textContent += s + '\n'; };
+let fails = 0;
+const rep = (l, m) => { if (fails++ < 30) log('GAGAL ' + l + ': ' + m); };
+const cmp = (l, g, e, keys) => {
+  if (g.length !== e.length) return rep(l, `jumlah baris ${g.length} vs ${e.length}`);
+  e.forEach((x, i) => keys.forEach((k) => {
+    const ok = typeof x[k] === 'string' ? g[i][k] === x[k] : close(g[i][k], x[k]);
+    if (!ok) rep(l, `baris ${i} ${k}: ${g[i][k]} vs ${x[k]}`);
+  }));
+};
+const gz = async (f) => {
+  const r = await fetch('golden/' + f);
+  if (!r.ok) throw new Error('kunci jawaban ' + f + ' tidak ditemukan');
+  return JSON.parse(await new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).text());
+};
+
+(async () => {
+  const ref = await fetch('../data/sim_ref.json').then((r) => r.json());
+
+  const fin = await gz('financing.json.gz');
+  fin.forEach(({ input, output }) => {
+    const g = Sim.financing(ref, { timbulan: input.p4_timbulan, bs: input.p4_bs, upgrade: input.p4_upgrade });
+    cmp('pembiayaan ' + JSON.stringify(input), g.data, output.data, ['periode', 'infrastruktur', 'operasional', 'pembinaan', 'monev', 'total']);
+  });
+  log(`pembiayaan: ${fin.length} kombinasi`);
+
+  const proj = await gz('projection.json.gz');
+  proj.forEach(({ input, output }) => {
+    const s = { timbulan: input.sim_timbulan, tps3r: input.sim_tps3r, bs: input.sim_bs, upgrade: input.sim_upgrade, fpsa: input.sim_fpsa, psel: input.sim_psel };
+    const g = Sim.proyeksi(ref, s);
+    const l = 'proyeksi ' + Object.values(s).join('/');
+    cmp(l, g.data, output.data, ['tahun', 'timbulan', 'kap_skenario', 'kap_baseline', 'kap_zero_od', 'target_rpjmd', 'defisit']);
+    cmp(l + ' per_jenis', g.komposisi.per_jenis, output.komposisi.per_jenis, ['jenis', 'timbulan', 'kapasitas', 'gap', 'pct']);
+    cmp(l + ' fasilitas', g.komposisi.fasilitas, output.komposisi.fasilitas, ['nama', 'kapasitas', 'pct_sistem']);
+    if (un(output.summary.tahun_seimbang) !== g.summary.tahun_seimbang) rep(l, 'tahun_seimbang');
+    if (un(output.summary.target_2029_tercapai) !== g.summary.target_2029_tercapai) rep(l, 'target_2029_tercapai');
+  });
+  log(`proyeksi: ${proj.length} kombinasi`);
+
+  const peta = await gz('map_status.json.gz');
+  let rows = 0;
+  peta.forEach(({ input, output }) => {
+    const g = Sim.petaSim(ref, input);
+    const by = Object.fromEntries(g.data.map((d) => [d.kelurahan, d]));
+    const l = 'peta ' + JSON.stringify(input);
+    output.data.forEach((e) => {
+      const x = by[e.kelurahan];
+      if (!x) return rep(l, 'kelurahan hilang: ' + e.kelurahan);
+      if (x.status_sim !== e.status_sim) rep(l, `${e.kelurahan} status ${x.status_sim} vs ${e.status_sim}`);
+      ['populasi', 'kap_efektif', 'timbulan_harian', 'akumulasi', 'rasio_isi', 'hari_kritis'].forEach((k) => {
+        if (!close(x[k], un(e[k]))) rep(l, `${e.kelurahan} ${k}: ${x[k]} vs ${un(e[k])}`);
+      });
+      rows++;
+    });
+    ['n_aman', 'n_siaga', 'n_kritis'].forEach((k) => { if (g.summary[k] !== output.summary[k]) rep(l, k); });
+  });
+  log(`peta: ${peta.length} kombinasi, ${rows} baris kelurahan`);
+
+  const st = document.getElementById('status');
+  st.textContent = fails ? `${fails} perbedaan ditemukan` : 'SEMUA COCOK dengan hasil R';
+  st.className = fails ? 'bad' : 'ok';
+  document.title = fails ? 'GAGAL' : 'LULUS';
+})().catch((e) => { document.getElementById('status').textContent = 'Error: ' + e.message; document.title = 'ERROR'; });
+</script>
+</body>
+</html>

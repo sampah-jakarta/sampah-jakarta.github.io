@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulasi — Sampah Jakarta</title>
+  <meta name="description" content="Simulasi skenario pengelolaan sampah Jakarta: status kelurahan per hari dan proyeksi kapasitas 2026–2045.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+
+  <nav class="topnav" aria-label="Navigasi utama">
+    <a class="site-title" href="index.html"><span class="dot"></span>SAMPAH JAKARTA</a>
+    <button class="nav-toggle" aria-label="Buka menu" aria-expanded="false">☰</button>
+    <div class="topnav-links">
+      <a href="index.html">Beranda</a>
+      <a href="timbulan.html">Timbulan</a>
+      <a href="infrastruktur.html">Infrastruktur</a>
+      <a class="active" href="simulasi.html">Simulasi</a>
+      <a href="pembiayaan.html">Pembiayaan</a>
+      <a href="dampak.html">Dampak</a>
+      <a href="tentang.html">Tentang</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <p class="eyebrow">Simulasi skenario</p>
+    <h1>Simulasi pengelolaan sampah</h1>
+    <p class="lead">Atur enam intervensi di bawah. Peta status kelurahan dan proyeksi 2026–2045 langsung dihitung ulang di browser.</p>
+  </header>
+
+  <main class="page-body">
+    <section class="panel sken-panel" aria-label="Pengaturan skenario">
+      <div class="panel-head panel-head-row">
+        <div><h2>Skenario intervensi</h2><p>Geser tiap pengaturan dari Eksisting sampai Maksimum.</p></div>
+        <div class="preset-row">
+          <span>Preset:</span>
+          <button class="btn-chip" data-preset="eksisting">Eksisting</button>
+          <button class="btn-chip" data-preset="minimum">Minimum</button>
+          <button class="btn-chip" data-preset="moderat">Moderat</button>
+          <button class="btn-chip" data-preset="maksimum">Maksimum</button>
+        </div>
+      </div>
+      <div id="sken-grid" class="sken-grid"></div>
+    </section>
+
+    <section class="stats stats-page stats-sim" aria-label="Ringkasan skenario">
+      <article class="stat"><p class="stat-num" data-k="timbulan">–</p><p class="stat-unit">ton/hari</p><p class="stat-label">Timbulan sampah</p><p class="stat-note">Total timbulan harian Jakarta</p></article>
+      <article class="stat" style="border-top-color:#1565C0"><p class="stat-num" style="color:#1565C0" data-k="terkelola">–</p><p class="stat-unit">ton/hari</p><p class="stat-label">Terkelola sistem</p><p class="stat-note">Kapasitas skenario, 2026</p></article>
+      <article class="stat stat-alert"><p class="stat-num" data-k="bgb">–</p><p class="stat-unit">ton/hari</p><p class="stat-label">Menuju Bantargebang</p><p class="stat-note">Residu dan sisa proses</p></article>
+      <article class="stat" id="card-pct"><p class="stat-num" data-k="pct">–</p><p class="stat-unit">dari timbulan</p><p class="stat-label">Persen terkelola</p><p class="stat-note">Kapasitas skenario ÷ timbulan</p></article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Status kelurahan per hari</h2>
+        <p>Akumulasi sampah jika sisa yang tidak terolah tidak bisa lagi dikirim ke Bantargebang.</p>
+      </div>
+      <div class="sim-map-layout">
+        <div class="map-box map-tall"><div id="map-sim" class="map-fill"></div>
+          <div class="legend" id="legend-sim"></div>
+        </div>
+        <aside class="sim-side">
+          <div class="status-counts">
+            <div class="sc sc-aman"><b data-k="n_aman">–</b><span>Aman</span></div>
+            <div class="sc sc-siaga"><b data-k="n_siaga">–</b><span>Siaga</span></div>
+            <div class="sc sc-kritis"><b data-k="n_kritis">–</b><span>Kritis</span></div>
+          </div>
+          <label class="filter-label" for="hari">Hari ke-<span data-k="hari">1</span></label>
+          <input type="range" id="hari" class="range" min="0" max="15" step="1" value="1">
+          <div class="range-ends"><span>0</span><span>15</span></div>
+          <div class="play-row">
+            <button class="btn btn-primary btn-sm" id="play">▶ Putar</button>
+            <button class="btn-chip" id="stop">Ulang</button>
+          </div>
+          <p class="sim-interp" id="interp"></p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="grid-2 grid-proj">
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Timbulan vs kapasitas, 2026–2045</h2>
+          <p>ton/hari. Garis vertikal: Bantargebang dibatasi (2027) dan target Zero Open Dumping (2030).</p>
+        </div>
+        <ul class="line-legend">
+          <li><i style="background:#F26B21"></i>Timbulan</li>
+          <li><i style="background:#1565C0"></i>Kapasitas skenario</li>
+          <li><i class="dash" style="border-color:#7A8B96"></i>Baseline</li>
+          <li><i class="dash" style="border-color:#0B2A5B"></i>Target RPJMD</li>
+        </ul>
+        <div id="proj" class="proj-plot"></div>
+        <p class="source-note">Proyeksi penduduk: Bappenas/BPS/UNFPA 2015–2045 (DKI Jakarta); RPJMD DKI 2025–2029 (Perda 2/2025); kalkulasi penulis.</p>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Evaluasi target</h2>
+          <p>Apakah skenario ini memenuhi target Indikator 11.6 RPJMD 2025–2029 dan Zero Open Dumping.</p>
+        </div>
+        <div id="targets" class="target-grid"></div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Komposisi 2026 menurut skenario</h2>
+        <p>Timbulan per jenis dan kapasitas olah dari fasilitas yang aktif pada skenario ini.</p>
+      </div>
+      <div id="komp-sim" class="komp-sim"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Basis asumsi</h2>
+        <p>Dasar angka setiap tingkat skenario beserta sumbernya.</p>
+      </div>
+      <div id="asumsi" class="asumsi"></div>
+    </section>
+
+    <p class="source-note">Model: koefisien timbulan SNI 19-3964-1994 (0,76 kg/kapita/hari); kapasitas TPS 3R 25 ton/hari/unit
+      dan bank sampah 22,21 kg/hari/unit (DLH–Bappeda 2026). TPS 3R dihitung per kecamatan lalu dibagi ke kelurahan menurut
+      jumlah penduduk. Kapasitas RDF dan PSEL dialokasikan ke kelurahan yang kekurangan kapasitas, dengan faktor akses 72%.
+      Status: AMAN &lt; 70% ≤ SIAGA &lt; 100% ≤ KRITIS dari rasio tumpukan terhadap kapasitas.</p>
+  </main>
+
+  <footer class="footer">
+    <p><b>Sampah Jakarta</b> — Kajian Arahan Kebijakan Pengelolaan Sampah DKI Jakarta Pasca-Pembatasan TPST Bantargebang.</p>
+    <p class="small">Seluruh angka bersifat estimasi untuk perencanaan kebijakan.</p>
+  </footer>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/sim.js"></script>
+  <script src="js/skenario.js"></script>
+  <script src="js/simulasi.js"></script>
+</body>
+</html>
