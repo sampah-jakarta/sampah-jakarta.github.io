@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Infrastruktur — Sampah Jakarta</title>
+  <meta name="description" content="Lokasi dan kapasitas fasilitas persampahan DKI Jakarta: TPS, TPS 3R, bank sampah, FPSA, dan TPST.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+
+  <nav class="topnav" aria-label="Navigasi utama">
+    <a class="site-title" href="index.html"><span class="dot"></span>SAMPAH JAKARTA</a>
+    <button class="nav-toggle" aria-label="Buka menu" aria-expanded="false">☰</button>
+    <div class="topnav-links">
+      <a href="index.html">Beranda</a>
+      <a href="timbulan.html">Timbulan</a>
+      <a class="active" href="infrastruktur.html">Infrastruktur</a>
+      <a href="simulasi.html">Simulasi</a>
+      <a href="pembiayaan.html">Pembiayaan</a>
+      <a href="dampak.html">Dampak</a>
+      <a href="tentang.html">Tentang</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <p class="eyebrow">Peta infrastruktur</p>
+    <h1>Fasilitas persampahan Jakarta</h1>
+    <p class="lead">Lokasi TPS, TPS 3R, bank sampah, saringan sungai, dan fasilitas pengolahan skala kota, beserta kapasitasnya.</p>
+  </header>
+
+  <main class="page-body">
+    <section class="stats stats-page stats-5" aria-label="Jumlah fasilitas">
+      <article class="stat"><p class="stat-num" data-k="total">–</p><p class="stat-unit">titik</p><p class="stat-label">Total fasilitas</p></article>
+      <article class="stat" style="border-top-color:#1565C0"><p class="stat-num" data-k="tps">–</p><p class="stat-unit">titik</p><p class="stat-label">TPS (Tipe 1–4)</p></article>
+      <article class="stat" style="border-top-color:#43A047"><p class="stat-num" data-k="tps3r">–</p><p class="stat-unit">titik</p><p class="stat-label">TPS 3R</p></article>
+      <article class="stat" style="border-top-color:#FFB300"><p class="stat-num" data-k="bs">–</p><p class="stat-unit">unit</p><p class="stat-label">Bank sampah</p></article>
+      <article class="stat" style="border-top-color:#E53935"><p class="stat-num" data-k="besar">–</p><p class="stat-unit">titik</p><p class="stat-label">FPSA / TPST</p></article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Peta fasilitas</h2>
+        <p>Pilih jenis fasilitas dan wilayah. Klik titik untuk melihat detailnya.</p>
+      </div>
+      <div class="infra-layout">
+        <aside class="infra-filter">
+          <label class="filter-label" for="wilayah">Wilayah</label>
+          <select id="wilayah" class="select">
+            <option value="">Seluruh Jakarta</option>
+          </select>
+          <p class="filter-label">Jenis fasilitas</p>
+          <div id="jenis-list" class="jenis-list"></div>
+          <div class="filter-actions">
+            <button class="btn-chip" id="pilih-semua">Pilih semua</button>
+            <button class="btn-chip" id="hapus-semua">Kosongkan</button>
+          </div>
+          <p class="filter-count"><b data-k="tampil">–</b> titik ditampilkan</p>
+        </aside>
+        <div class="map-box map-tall"><div id="map-infra" class="map-fill"></div></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Kapasitas dan beban fasilitas pengolahan</h2>
+        <p>Skala Jakarta. Angka dari dokumen resmi; sumber tercantum di setiap baris.</p>
+      </div>
+      <div id="kap-table" class="kap-table"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Rekapitulasi per kota administrasi</h2>
+        <p>Jumlah fasilitas per jenis di setiap wilayah.</p>
+      </div>
+      <div id="wilayah-cards" class="wilayah-grid"></div>
+    </section>
+
+    <p class="source-note">Sumber: DLH DKI Jakarta 2026 (lokasi dan atribut fasilitas, survei lapangan). Kapasitas: TPST Bantargebang
+      (Renstra DLH DKI 2025–2029); RDF/FPSA dan TPS 3R (Paparan KLH, 27 April 2026); PSEL (DLH Jakarta, Zero Open Dumping,
+      3 Juli 2026); bank sampah 22,21 kg/hari/unit (realisasi pilot Rorotan). Batas administrasi: BPS/Permendagri.</p>
+  </main>
+
+  <footer class="footer">
+    <p><b>Sampah Jakarta</b> — Kajian Arahan Kebijakan Pengelolaan Sampah DKI Jakarta Pasca-Pembatasan TPST Bantargebang.</p>
+    <p class="small">Seluruh angka bersifat estimasi untuk perencanaan kebijakan.</p>
+  </footer>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/infrastruktur.js"></script>
+</body>
+</html>

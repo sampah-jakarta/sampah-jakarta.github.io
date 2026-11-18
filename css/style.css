@@ -237,3 +237,52 @@ h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; }
   .map-box { height: 360px; }
   .cbar { grid-template-columns: 110px 1fr 56px; }
 }
+
+/* ---------- Infrastruktur ---------- */
+.stats-5 { grid-template-columns: repeat(5, 1fr); }
+.infra-layout { display: grid; grid-template-columns: 260px 1fr; gap: 20px; }
+.infra-filter { display: flex; flex-direction: column; gap: 8px; }
+.filter-label { margin: 6px 0 0; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.select { font: inherit; font-size: 14px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); }
+.jenis-list { display: flex; flex-direction: column; gap: 2px; }
+.jenis-item { display: flex; align-items: center; gap: 9px; padding: 6px 8px; border-radius: 8px; font-size: 13.5px; cursor: pointer; }
+.jenis-item:hover { background: var(--blue-light); }
+.jenis-item input { accent-color: var(--navy); margin: 0; }
+.jenis-item i, .pop-jenis i, .wil-card li i { width: 10px; height: 10px; border-radius: 50%; flex: none; display: inline-block; }
+.jenis-item b { margin-left: auto; font-weight: 600; color: var(--muted); font-size: 12.5px; }
+.filter-actions { display: flex; gap: 8px; margin-top: 4px; }
+.filter-count { margin: 6px 0 0; font-size: 13px; color: var(--muted); }
+.map-tall { height: 600px; }
+.pop-jenis { display: flex; align-items: center; gap: 6px; margin-top: 2px; color: var(--muted); }
+.kap-table { display: flex; flex-direction: column; }
+.kap-row { display: grid; grid-template-columns: 1.6fr 1fr 2.2fr 1fr; gap: 16px; align-items: center; padding: 14px 4px;
+  border-bottom: 1px solid var(--line); font-size: 14px; }
+.kap-row:last-child { border-bottom: 0; }
+.kap-row small { display: block; font-size: 12px; color: var(--muted); font-weight: 400; }
+.kap-head { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 0; }
+.kap-row .muted { color: var(--muted); font-style: italic; }
+.kap-bar { display: block; height: 8px; background: #EEF2F6; border-radius: 999px; overflow: hidden; margin-bottom: 6px; }
+.kap-bar span { display: block; height: 100%; border-radius: 999px; }
+.kap-badge-cell { text-align: right; }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
+.badge-danger { background: #FCE9E9; color: var(--kritis); }
+.badge-info { background: var(--blue-light); color: var(--navy); }
+.badge-muted { background: #EEF1F5; color: var(--muted); font-style: italic; }
+.wilayah-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.wil-card { border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.wil-card h3 { font-size: 14px; margin: 0 0 4px; color: var(--navy); }
+.wil-total { font-size: 24px; font-weight: 700; margin: 0 0 8px; color: var(--navy); }
+.wil-total span { font-size: 12px; font-weight: 400; color: var(--muted); }
+.wil-card ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
+.wil-card li { display: flex; align-items: center; gap: 8px; }
+.wil-card li b { margin-left: auto; font-weight: 600; }
+@media (max-width: 1100px) { .wilayah-grid { grid-template-columns: repeat(3, 1fr); } .stats-5 { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) {
+  .infra-layout { grid-template-columns: 1fr; }
+  .jenis-list { display: grid; grid-template-columns: 1fr 1fr; }
+  .map-tall { height: 440px; }
+  .kap-head { display: none; }
+  .kap-row { grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+  .kap-badge-cell { text-align: left; }
+  .wilayah-grid, .stats-5 { grid-template-columns: repeat(2, 1fr); }
+}
