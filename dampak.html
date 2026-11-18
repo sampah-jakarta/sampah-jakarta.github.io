@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dampak — Sampah Jakarta</title>
+  <meta name="description" content="Estimasi kerugian kesehatan, lingkungan, dan produktivitas jika masalah sampah Jakarta tidak ditangani, 2026–2045.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+
+  <nav class="topnav" aria-label="Navigasi utama">
+    <a class="site-title" href="index.html"><span class="dot"></span>SAMPAH JAKARTA</a>
+    <button class="nav-toggle" aria-label="Buka menu" aria-expanded="false">☰</button>
+    <div class="topnav-links">
+      <a href="index.html">Beranda</a>
+      <a href="timbulan.html">Timbulan</a>
+      <a href="infrastruktur.html">Infrastruktur</a>
+      <a href="simulasi.html">Simulasi</a>
+      <a href="pembiayaan.html">Pembiayaan</a>
+      <a class="active" href="dampak.html">Dampak</a>
+      <a href="tentang.html">Tentang</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <p class="eyebrow">Biaya jika tidak bertindak</p>
+    <h1>Kerugian akibat sampah yang tidak tertangani</h1>
+    <p class="lead">Estimasi biaya kesehatan, kerusakan lingkungan, dan pendapatan warga yang hilang, dihitung dari data pemerintah dan riset 2024–2026.</p>
+  </header>
+
+  <main class="page-body">
+    <section class="panel sken-panel">
+      <div class="panel-head panel-head-row">
+        <div><h2>Skenario intervensi</h2><p id="sken-desc"></p></div>
+        <div class="seg" id="seg" role="radiogroup" aria-label="Skenario"></div>
+      </div>
+    </section>
+
+    <section class="stats stats-page stats-sim" aria-label="Kerugian 2026">
+      <article class="stat stat-alert"><p class="stat-num" data-k="kes">–</p><p class="stat-unit" data-k="kes_d">per tahun (2026)</p><p class="stat-label">Biaya kesehatan</p><p class="stat-note">DBD, leptospirosis, diare, gangguan pernapasan sekitar TPS</p></article>
+      <article class="stat" style="border-top-color:var(--siaga)"><p class="stat-num" style="color:var(--siaga)" data-k="lng">–</p><p class="stat-unit" data-k="lng_d">per tahun (2026)</p><p class="stat-label">Kerusakan lingkungan</p><p class="stat-note">Metana Bantargebang, sungai, plastik laut, tanah</p></article>
+      <article class="stat"><p class="stat-num" data-k="prd">–</p><p class="stat-unit" data-k="prd_d">per tahun (2026)</p><p class="stat-label">Pendapatan warga hilang</p><p class="stat-note">Hari kerja hilang dan nilai properti sekitar TPS</p></article>
+      <article class="stat stat-warn"><p class="stat-num" data-k="tot">–</p><p class="stat-unit" data-k="tot_d">per tahun (2026)</p><p class="stat-label">Total kerugian</p><p class="stat-note" data-k="tot_note"></p></article>
+    </section>
+
+    <section class="grid-2 grid-proj">
+      <article class="panel">
+        <div class="panel-head"><h2>Proyeksi kerugian tahunan 2026–2045</h2>
+          <p>Rp triliun per tahun. Kerugian tumbuh 3,5% per tahun mengikuti pertumbuhan penduduk dan intensitas kontak dengan lingkungan tercemar.</p></div>
+        <ul class="line-legend" id="dampak-legend"></ul>
+        <div id="dampak-chart" class="proj-plot"></div>
+      </article>
+      <article class="panel" id="savings"></article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Kapasitas pengolahan perlu ruang cadangan</h2>
+        <p>Berdasarkan data penimbangan TPST Bantargebang 2022–2026.</p></div>
+      <p class="body-text">Sampah kota tidak bisa ditunda. Ketika fasilitas penuh, sampah tetap datang dan akhirnya menumpuk di jalan,
+        sungai, atau lahan terbuka. Karena itu kapasitas perlu sedikit di atas kebutuhan rata-rata.</p>
+      <div class="formula">Ruang cadangan minimum = Z × σ × √L = <b data-k="sc_formula"></b></div>
+      <div class="metric-row" id="safety"></div>
+      <details class="asumsi-item"><summary>Cara menghitung ruang cadangan</summary>
+        <div class="body-text">
+          <p>Jumlah sampah harian naik-turun di sekitar rata-rata <b>7.400 ton</b> dengan variasi sekitar <b>±400 ton</b> per hari.
+            Besarnya cadangan bergantung pada seberapa yakin kita ingin kapasitas selalu cukup. Bila naik-turunnya mengikuti
+            pola kurva lonceng, tiap tingkat keyakinan punya angka pengalinya:</p>
+          <table class="harga-table ladder"><thead><tr><th>Di atas rata-rata</th><th>Hari tercukupi</th></tr></thead>
+            <tbody><tr><td>+1 σ</td><td>±84%</td></tr><tr><td>+1,64 σ</td><td>95%</td></tr><tr class="hl-row"><td>+2,05 σ</td><td>98%</td></tr><tr><td>+2,33 σ</td><td>99%</td></tr></tbody></table>
+          <p>Target yang dipakai <b>98%</b>: fasilitas cukup pada 98 dari 100 hari, sehingga pengalinya 2,05. Masa tunggu 3 bulan
+            diperhitungkan karena menambah kapasitas tidak instan. Asumsi distribusi normal adalah penyederhanaan. Data
+            Februari–November 2023 tidak dipakai karena ada ketidaksesuaian satuan.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="skema-grid">
+      <article class="skema-card" style="border-top-color:var(--kritis)"><h3>Rasio manfaat-biaya 3–5×</h3>
+        <p>Setiap Rp 1 untuk skenario moderat berpotensi mencegah Rp 3–5 kerugian. Konsisten dengan PLTSa Benowo (1,8–2,6×), studi IPB/Pekanbaru (2,9–4,5×), dan estimasi WHO global (3–8×).</p></article>
+      <article class="skema-card" style="border-top-color:var(--orange)"><h3>Bantargebang: penghasil metana skala dunia</h3>
+        <p>Carbon Mapper/UCLA (April 2026): lebih dari 6 ton CH₄/jam, atau 1,47 juta tCO₂e per tahun. Nilai kredit karbon yang tidak diklaim USD 29–73 juta/tahun.</p></article>
+      <article class="skema-card" style="border-top-color:var(--navy)"><h3>87% beban pencemar Ciliwung dari limbah domestik</h3>
+        <p>Inventarisasi DLH Jakarta 2023. Biaya normalisasi Rp 167,6 M/km (BPK DKI 2024); remediasi penuh lebih dari 650 km sungai Jakarta diperkirakan di atas Rp 20 T.</p></article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Bagaimana angka ini dihitung</h2><p>Empat langkah, dari komponen biaya sampai kerugian yang dapat dicegah.</p></div>
+      <div class="metric-row steps" id="steps"></div>
+      <p class="source-note">Kerugian yang dicegah = baseline × reduksi kategori. Reduksi tiap kategori diturunkan dari efektivitas intervensi pada riset, bukan asumsi tunggal.</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Langkah 1 — komponen biaya baseline</h2><p>Setiap komponen dihitung dari data spesifik: epidemiologi, emisi, tenaga kerja, dan harga properti.</p></div>
+      <div class="komp-cols" id="komponen"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Langkah 2 — reduksi kerugian per kategori</h2><p>Diturunkan dari efektivitas intervensi pada dokumen resmi dan jurnal. Tanpa intervensi = 0%.</p></div>
+      <div class="red-table" id="reduksi"></div>
+      <div class="asumsi" id="riset" style="margin-top:18px"></div>
+    </section>
+
+    <p class="source-note">Sumber baseline: World Bank WSP, Economic Impacts of Sanitation in Indonesia (2008); Carbon Mapper/UCLA (April 2026);
+      UGM, Beban Ekonomi DBD (2024); Nery et al. 2023 (PMC10482283); BPK DKI Jakarta (2024); UGM, Studi Harga Hedonik TPA Manggar (2023);
+      IPB/JPSL (2019). Efektivitas intervensi: IPCC AR6 WG3; tinjauan sistematis manajemen lingkungan terhadap indeks vektor DBD dan studi
+      terpadu Makassar (PMC6695203); PLoS NTD pntd.0009154; PMC8998175; studi PM2.5 dumpsite Chennai dan Sabak (PMC6981880); Jambeck et al.
+      (2015); OII Landfill Los Angeles dan US EPA brownfield. Seluruh estimasi bersifat indikatif; kajian valuasi lingkungan khusus Jakarta masih diperlukan.</p>
+  </main>
+
+  <footer class="footer">
+    <p><b>Sampah Jakarta</b> — Kajian Arahan Kebijakan Pengelolaan Sampah DKI Jakarta Pasca-Pembatasan TPST Bantargebang.</p>
+    <p class="small">Seluruh angka bersifat estimasi untuk perencanaan kebijakan.</p>
+  </footer>
+
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/dampak-model.js"></script>
+  <script src="js/dampak.js"></script>
+</body>
+</html>

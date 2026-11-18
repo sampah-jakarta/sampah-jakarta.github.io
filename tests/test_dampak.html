@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="utf-8"><title>Uji paritas model dampak</title>
+<style>body{font:14px system-ui,sans-serif;margin:32px;color:#16334E}pre{background:#F4F7FB;padding:12px;border-radius:8px}.ok{color:#2E7D32}.bad{color:#C0392B}</style></head>
+<body>
+<h1>Uji paritas js/dampak-model.js terhadap panel6.py</h1>
+<p>Kunci jawaban <code>golden/dampak.json</code> dibuat dengan mengimpor <code>panel6.py</code> (lihat commit). Buka lewat server lokal.</p>
+<p id="status">Menjalankan…</p><pre id="log"></pre>
+<script src="../js/dampak-model.js"></script>
+<script>
+const log = (s) => { document.getElementById('log').textContent += s + '\n'; };
+let fails = 0, n = 0;
+const eq = (l, a, b) => { n++; if (Math.abs(a - b) > 1e-9) { fails++; log(`GAGAL ${l}: ${a} vs ${b}`); } };
+const arr = (l, a, b) => b.forEach((v, i) => eq(`${l}[${i}]`, a[i], v));
+fetch('golden/dampak.json').then((r) => r.json()).then((g) => {
+  ['BASE_KES', 'BASE_LNG', 'BASE_PRD', 'BASE_TOT'].forEach((k) => arr(k, Dampak[k], g[k]));
+  ['KES_2026', 'LNG_2026', 'PRD_2026'].forEach((k) => eq(k, Dampak[k], g[k]));
+  Object.entries(g.skenario).forEach(([k, e]) => {
+    const s = Dampak.series(k), r = Dampak.ringkasan(k);
+    ['kes', 'lng', 'prd', 'inv'].forEach((x) => arr(`${k}.${x}`, s[x], e[x]));
+    eq(`${k}.tot2026`, r.tot2026, e.tot2026); eq(`${k}.net`, r.net, e.net);
+    eq(`${k}.bcr`, r.bcr, e.bcr); eq(`${k}.saving2045`, r.saving2045, e.saving2045);
+  });
+  log(`${n} nilai dibandingkan`);
+  const st = document.getElementById('status');
+  st.textContent = fails ? `${fails} perbedaan` : 'SEMUA COCOK dengan panel6.py';
+  st.className = fails ? 'bad' : 'ok'; document.title = fails ? 'GAGAL' : 'LULUS';
+});
+</script>
+</body>
+</html>
