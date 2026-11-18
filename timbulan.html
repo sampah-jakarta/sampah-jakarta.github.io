@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Timbulan — Sampah Jakarta</title>
+  <meta name="description" content="Timbulan, komposisi, dan status kapasitas TPS per kelurahan di DKI Jakarta.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page">
+
+  <nav class="topnav" aria-label="Navigasi utama">
+    <a class="site-title" href="index.html"><span class="dot"></span>SAMPAH JAKARTA</a>
+    <button class="nav-toggle" aria-label="Buka menu" aria-expanded="false">☰</button>
+    <div class="topnav-links">
+      <a href="index.html">Beranda</a>
+      <a class="active" href="timbulan.html">Timbulan</a>
+      <a href="infrastruktur.html">Infrastruktur</a>
+      <a href="simulasi.html">Simulasi</a>
+      <a href="pembiayaan.html">Pembiayaan</a>
+      <a href="dampak.html">Dampak</a>
+      <a href="tentang.html">Tentang</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <p class="eyebrow">Kondisi eksisting</p>
+    <h1>Timbulan dan kapasitas sampah Jakarta</h1>
+    <p class="lead">Timbulan per kelurahan, komposisi jenis sampah, dan status kapasitas TPS dalam satu hari normal.</p>
+  </header>
+
+  <main class="page-body">
+    <section class="stats stats-page" aria-label="Angka kunci">
+      <article class="stat">
+        <p class="stat-num" data-k="total">–</p>
+        <p class="stat-unit">ton/hari</p>
+        <p class="stat-label">Timbulan harian</p>
+        <p class="stat-note">Penduduk × 0,76 kg/kapita/hari</p>
+      </article>
+      <article class="stat stat-aman">
+        <p class="stat-num" data-k="terolah">–</p>
+        <p class="stat-unit" data-k="terolah_pct">ton/hari</p>
+        <p class="stat-label">Sampah terkelola</p>
+        <p class="stat-note">Kapasitas olah organik + anorganik</p>
+      </article>
+      <article class="stat stat-alert">
+        <p class="stat-num" data-k="gap">–</p>
+        <p class="stat-unit">ton/hari</p>
+        <p class="stat-label">Gap pengelolaan</p>
+        <p class="stat-note">Belum terolah di sumber</p>
+      </article>
+      <article class="stat stat-warn">
+        <p class="stat-num" data-k="kritis">–</p>
+        <p class="stat-unit">dari 267 kelurahan</p>
+        <p class="stat-label">Kelurahan kritis</p>
+        <p class="stat-note">Timbulan melebihi kapasitas TPS</p>
+      </article>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Timbulan per kelurahan</h2>
+          <p>ton/hari. Arahkan kursor ke kelurahan untuk melihat angkanya.</p>
+        </div>
+        <div class="map-box"><div id="map-timbulan" class="map-fill"></div>
+          <div class="legend"><b>Timbulan</b><div class="bar" style="background:linear-gradient(90deg,#E8F2FB,#A9D3F0,#7FB3E3,#0B2A5B)"></div><div class="ends"><span>5</span><span>100+ ton/hari</span></div></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Status kapasitas TPS</h2>
+          <p>Rasio timbulan harian terhadap kapasitas TPS terpasang, hari ke-1. Klik kelurahan untuk detail.</p>
+        </div>
+        <div class="map-box"><div id="map-status" class="map-fill"></div>
+          <div class="legend" id="legend-status"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Komposisi sampah</h2>
+        <p>Porsi tiap jenis dari total timbulan, dan berapa persen yang sudah ada kapasitas olahnya.</p>
+      </div>
+      <div id="komposisi" class="komp-page"></div>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <div class="panel-head panel-head-row">
+          <div><h2 id="cascade-title">Timbulan per kota administrasi</h2>
+            <p id="cascade-hint">Klik salah satu kota untuk melihat kecamatannya.</p></div>
+          <button id="cascade-back" class="btn-chip" hidden>← Kembali</button>
+        </div>
+        <div id="cascade" class="cascade"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Tonase sampah ke TPST, per bulan</h2>
+          <p>Rata-rata ton per hari yang tercatat masuk.</p>
+        </div>
+        <div id="trend" class="trend-plot"></div>
+      </article>
+    </section>
+
+    <p class="source-note">Sumber: DLH DKI Jakarta 2026 (komposisi, kapasitas TPS, tonase bulanan). Timbulan dihitung dari
+      proyeksi penduduk × 0,76 kg/kapita/hari (SNI 19-3964-1994). Kapasitas satuan TPS: Tipe 1 = 0,3; Tipe 2 = 1,5;
+      Tipe 3 = 3,0; Tipe 4 = 6,0 ton/hari. Peta tidak mencakup 6 kelurahan di Kepulauan Seribu.</p>
+  </main>
+
+  <footer class="footer">
+    <p><b>Sampah Jakarta</b> — Kajian Arahan Kebijakan Pengelolaan Sampah DKI Jakarta Pasca-Pembatasan TPST Bantargebang.</p>
+    <p class="small">Seluruh angka bersifat estimasi untuk perencanaan kebijakan.</p>
+  </footer>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/timbulan.js"></script>
+</body>
+</html>

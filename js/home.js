@@ -1,17 +1,7 @@
 // Beranda: scrollytelling. Peta (MapLibre) dan grafik (Plotly) bergantian sesuai langkah cerita.
 
-const COLORS = { aman: '#2E7D32', siaga: '#EF7C00', kritis: '#C0392B' };
-const BASEMAP = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
-const fmt = (n) => n.toLocaleString('id-ID');
-
-// Menu HP
-document.querySelector('.nav-toggle').addEventListener('click', (e) => {
-  const nav = document.querySelector('.topnav');
-  nav.classList.toggle('open');
-  e.currentTarget.setAttribute('aria-expanded', nav.classList.contains('open'));
-});
-
-const load = (f) => fetch(`data/${f}`).then((r) => r.json());
+// Butuh js/common.js (dimuat lebih dulu).
+const load = loadData;
 
 Promise.all([
   load('batas_kelurahan.geojson'),
@@ -45,19 +35,7 @@ function init(d) {
   setText('k1', fmt(d.bau[1].summary.n_kritis));
   setText('k14', fmt(d.bau[14].summary.n_kritis));
 
-  const map = new maplibregl.Map({
-    container: 'map',
-    style: {
-      version: 8,
-      sources: { base: { type: 'raster', tiles: [BASEMAP], tileSize: 256, attribution: 'Esri, HERE, Garmin, © OpenStreetMap' } },
-      layers: [{ id: 'base', type: 'raster', source: 'base' }],
-    },
-    center: [106.83, -6.2],
-    zoom: 10,
-    attributionControl: { compact: true },
-    cooperativeGestures: true,
-  });
-  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+  const map = makeMap('map');
 
   map.on('load', () => {
     map.addSource('kel', { type: 'geojson', data: d.kel });
@@ -86,9 +64,6 @@ function timbulanColor() {
   return ['case', ['==', ['get', 'timbulan'], null], '#E2E8F0',
     ['interpolate', ['linear'], ['get', 'timbulan'], 5, '#E8F2FB', 30, '#A9D3F0', 60, '#7FB3E3', 100, '#0B2A5B']];
 }
-function statusColor(prop) {
-  return ['match', ['get', prop], 'AMAN', COLORS.aman, 'SIAGA', COLORS.siaga, 'KRITIS', COLORS.kritis, '#E2E8F0'];
-}
 
 function makeSteps(map, d) {
   const graphic = document.querySelector('.story-graphic');
@@ -96,8 +71,7 @@ function makeSteps(map, d) {
   const showMap = () => graphic.classList.remove('show-chart');
   const showChart = () => graphic.classList.add('show-chart');
   const fly = (zoom = 10) => map.flyTo({ center: [106.83, -6.2], zoom, duration: 1200 });
-  const statusLegend = (title) => `<b>${title}</b>` + ['AMAN', 'SIAGA', 'KRITIS']
-    .map((s) => `<div class="row"><span class="sw" style="background:${COLORS[s.toLowerCase()]}"></span>${s}</div>`).join('');
+  const statusLegend = statusLegendHTML;
 
   return {
     timbulan() {
@@ -109,37 +83,8 @@ function makeSteps(map, d) {
     },
     komposisi() {
       showChart();
-      const total = d.komp.reduce((t, r) => t + r.timbulan_harian_ton, 0);
-      const bars = d.komp.map((r) => {
-        const c = JENIS_WARNA[r.jenis];
-        const pct = r.pct_terolah;
-        return `<div class="kbar">
-          <div class="kbar-head"><span class="kbar-name"><i style="background:${c}"></i>${r.jenis}</span>
-            <span class="kbar-val">${fmtPct(pct)}</span></div>
-          <div class="kbar-track"><div class="kbar-fill" style="width:${Math.max(pct, 1.5)}%;background:${c}"></div></div>
-          <div class="kbar-sub">${fmt(Math.round(r.kapasitas_harian_ton))} dari ${fmt(Math.round(r.timbulan_harian_ton))} ton/hari</div>
-        </div>`;
-      }).join('');
-      chartPanel(`
-        <div class="chart-head"><h3>Komposisi sampah</h3><p>Porsi tiap jenis dari total timbulan, dan berapa persen yang sudah ada kapasitas olahnya</p></div>
-        <div class="komp-grid">
-          <div class="donut-wrap"><div id="donut" class="donut"></div></div>
-          <div class="kbars"><p class="kbars-title">Kapasitas olah terhadap timbulan</p>${bars}
-            <p class="kbars-note">Residu dan B3 tercatat tertangani penuh (data DLH).</p></div>
-        </div>`);
-      Plotly.newPlot('donut', [{
-        type: 'pie', hole: 0.72, sort: false, direction: 'clockwise',
-        labels: d.komp.map((r) => r.jenis), values: d.komp.map((r) => r.timbulan_harian_ton),
-        marker: { colors: d.komp.map((r) => JENIS_WARNA[r.jenis]), line: { color: '#fff', width: 3 } },
-        textinfo: 'none', hovertemplate: '<b>%{label}</b><br>%{value:,.0f} ton/hari · %{percent}<extra></extra>',
-      }], {
-        font: { family: 'Plus Jakarta Sans', color: '#16334E' }, showlegend: false,
-        margin: { t: 0, l: 0, r: 0, b: 0 }, paper_bgcolor: 'rgba(0,0,0,0)',
-        annotations: [{ text: `<b style="font-size:26px">${fmt(Math.round(total))}</b><br><span style="font-size:13px;color:#6B7C93">ton/hari</span>`,
-          x: 0.5, y: 0.5, xref: 'paper', yref: 'paper', showarrow: false }],
-      }, { responsive: true, displayModeBar: false });
-      document.querySelector('.donut-wrap').insertAdjacentHTML('beforeend',
-        `<ul class="donut-legend">${d.komp.map((r) => `<li><i style="background:${JENIS_WARNA[r.jenis]}"></i>${r.jenis}<b>${fmtPct(r.pct_total)}</b></li>`).join('')}</ul>`);
+      chartPanel(`<div class="chart-head"><h3>Komposisi sampah</h3><p>Porsi tiap jenis dari total timbulan, dan berapa persen yang sudah ada kapasitas olahnya</p></div><div id="komp-body" class="komp-body"></div>`);
+      renderKomposisi(document.getElementById('komp-body'), d.komp);
     },
     fasilitas() {
       showMap(); fly(10.3);
@@ -191,10 +136,6 @@ function makeSteps(map, d) {
     },
   };
 }
-
-// Warna jenis sampah sama dengan dashboard lama (panel1.py JENIS_WARNA)
-const JENIS_WARNA = { Organik: '#2E7D32', Anorganik: '#F5C518', Residu: '#90A4AE', B3: '#C0392B' };
-const fmtPct = (v) => `${v.toLocaleString('id-ID', { maximumFractionDigits: 1 })}%`;
 
 function chartPanel(html) {
   const el = document.getElementById('chart');
