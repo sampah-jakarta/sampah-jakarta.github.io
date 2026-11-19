@@ -67,14 +67,14 @@ h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; }
 /* ---------- Kartu angka ---------- */
 .stats { position: relative; z-index: 5; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
   max-width: 1180px; margin: -90px auto 0; padding: 0 24px; }
-.stat { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px 22px 18px;
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 20px 14px;
   border-top: 4px solid var(--navy); }
 .stat-alert { border-top-color: var(--red); }
 .stat { border-top-width: 4px; }
-.stat-num { font-size: 32px; font-weight: 700; margin: 0; color: var(--navy); }
+.stat-num { font-size: 28px; line-height: 1.2; font-weight: 700; margin: 0; color: var(--navy); }
 .stat-alert .stat-num { color: var(--red); }
 .stat-unit { margin: 0; font-size: 13px; color: var(--muted); }
-.stat-label { margin: 10px 0 0; font-size: 14px; font-weight: 500; }
+.stat-label { margin: 6px 0 0; font-size: 14px; font-weight: 500; }
 
 /* ---------- Scrollytelling ---------- */
 .story { position: relative; display: grid; grid-template-columns: minmax(320px, 420px) 1fr; gap: 0;
