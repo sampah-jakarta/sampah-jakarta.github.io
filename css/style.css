@@ -426,3 +426,14 @@ h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; }
 .find-list, .src-list { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.55; }
 .src-list { font-size: 13px; color: var(--ink); }
 @media (max-width: 900px) { .method-grid { grid-template-columns: 1fr; } }
+
+/* Ikon kartu "Halaman lainnya" (pengganti foto) */
+.explore-icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; margin: 22px 20px 0; }
+.explore-card:hover .explore-icon { transform: scale(1.06); }
+.explore-icon { transition: transform .2s ease; }
+.ic-timbulan { background: #E8F2FB; color: #0B2A5B; }
+.ic-infra    { background: #E3EEF9; color: #1565C0; }
+.ic-sim      { background: #FDEDE3; color: #F26B21; }
+.ic-biaya    { background: #E8F2FB; color: #16334E; }
+.ic-dampak   { background: #FBE9E7; color: #C0392B; }
+.explore-icon + .explore-body { padding-top: 14px; }
