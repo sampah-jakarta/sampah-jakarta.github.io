@@ -8,21 +8,32 @@ Promise.all([
   load('timbulan_kelurahan.json'),
   load('fasilitas.geojson'),
   load('composition.json'),
-  load('story_bau.json'),
+  load('sim_ref.json'),
+  load('tetangga.json'),
   load('default_projection.json'),
-]).then(([kel, timb, fas, komp, bau, proj]) => init({ kel, timb, fas, komp, bau, proj }));
+]).then(([kel, timb, fas, komp, ref, tetangga, proj]) => init({ kel, timb, fas, komp, ref, tetangga, proj }));
 
 function init(d) {
   // Gabungkan atribut ke poligon kelurahan (berdasarkan nama, huruf besar)
   const key = (s) => s.toUpperCase().trim();
   const timbBy = Object.fromEntries(d.timb.map((r) => [key(r.nama), r.timbulan]));
-  const st = (h) => Object.fromEntries(Object.entries(d.bau[h].status).map(([k, v]) => [key(k), v]));
-  const s1 = st(1), s14 = st(14);
+  // Skenario BAU dengan model limpahan ke tetangga, dihitung langsung (js/sim.js)
+  const BAU = { sken_tps3r: 'eksisting', sken_upgrade: 'eksisting', sken_bs: 'eksisting', sken_fpsa: 'eksisting', sken_psel: 'eksisting' };
+  const hSemua = Sim.hariSemuaKritis(d.ref, d.tetangga, BAU) ?? 15;
+  d.hSemua = hSemua;
+  d.kritisPerHari = {};
+  const perHari = {};
+  for (let h = 1; h <= hSemua; h++) {
+    const r = Sim.petaLimpahan(d.ref, d.tetangga, { hari: h, ...BAU });
+    perHari[h] = Object.fromEntries(r.data.map((x) => [key(x.kelurahan), x.status_sim]));
+    d.kritisPerHari[h] = r.summary.n_kritis;
+  }
+  const s1 = perHari[1];
   d.kel.features.forEach((f) => {
     const k = key(f.properties.nama);
     f.properties.timbulan = timbBy[k] ?? null;
     f.properties.s1 = s1[k] ?? 'NA';
-    f.properties.s14 = s14[k] ?? 'NA';
+    for (let h = 1; h <= hSemua; h++) f.properties[`s${h}`] = perHari[h][k] ?? 'NA';
   });
 
   // Angka di teks cerita diisi dari data, bukan diketik manual
@@ -32,8 +43,8 @@ function init(d) {
   setText('n_tps', `${fmt(nTps)} TPS`);
   setText('n_bs', `${fmt(cnt['Bank Sampah'] || 0)} bank sampah`);
   setText('n_tps3r', `${fmt(cnt['TPS 3R'] || 0)} TPS 3R`);
-  setText('k1', fmt(d.bau[1].summary.n_kritis));
-  setText('k14', fmt(d.bau[14].summary.n_kritis));
+  setText('k1', fmt(d.kritisPerHari[1]));
+  setText('hsemua', hSemua);
 
   const map = makeMap('map');
 
@@ -65,6 +76,7 @@ function timbulanColor() {
     ['interpolate', ['linear'], ['get', 'timbulan'], 5, '#E8F2FB', 30, '#A9D3F0', 60, '#7FB3E3', 100, '#0B2A5B']];
 }
 
+let anim = null;
 function makeSteps(map, d) {
   const graphic = document.querySelector('.story-graphic');
   const legend = document.getElementById('legend');
@@ -104,9 +116,18 @@ function makeSteps(map, d) {
     hari14() {
       showMap(); fly(10);
       map.setLayoutProperty('fas', 'visibility', 'none');
-      map.setPaintProperty('kel-fill', 'fill-color', statusColor('s14'));
       map.setPaintProperty('kel-fill', 'fill-opacity', 0.85);
-      legend.innerHTML = statusLegend('Status hari ke-14 (BAU)');
+      // Animasi hari ke-1 sampai seluruh kelurahan kritis
+      clearInterval(anim);
+      let h = 1;
+      const tick = () => {
+        map.setPaintProperty('kel-fill', 'fill-color', statusColor(`s${h}`));
+        legend.innerHTML = statusLegend(`Hari ke-${h} (BAU, dengan limpahan)`);
+        setText('hcount', h); setText('kcount', fmt(d.kritisPerHari[h]));
+        if (h >= d.hSemua) clearInterval(anim); else h += 1;
+      };
+      tick();
+      anim = setInterval(tick, 900);
     },
     proyeksi() {
       showChart();
@@ -153,6 +174,7 @@ function observeSteps(steps) {
       if (name === current) return;
       current = name;
       els.forEach((s) => s.classList.toggle('active', s === e.target));
+      if (name !== 'hari14') clearInterval(anim);
       steps[name]?.();
     });
   }, { rootMargin: '-45% 0px -45% 0px' });

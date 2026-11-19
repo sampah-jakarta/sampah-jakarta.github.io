@@ -210,5 +210,70 @@
     return { data, total_keseluruhan: sum(data.map((d) => d.total)), satuan: 'Miliar Rp' };
   }
 
-  return { petaSim, proyeksi, komposisi2026, financing, roundR, KAP_RDF, KAP_PSEL };
+  // ── Status kelurahan dengan limpahan ke tetangga (model situs, menggantikan v33 untuk peta) ──
+  // Kapasitas dan timbulan per kelurahan sama dengan petaSim (v33). Bedanya: sisa harian yang tidak
+  // tertampung lagi oleh kelurahan yang sudah KRITIS dilimpahkan sama rata ke tetangga yang belum
+  // KRITIS, dan tiba keesokan harinya. Tetangga = kelurahan yang batasnya bersentuhan (tetangga.json).
+  // Kelurahan tanpa tetangga di peta (Kepulauan Seribu) memakai hasil petaSim apa adanya.
+  // Pada hari ke-1 belum ada limpahan masuk, jadi hasilnya identik dengan petaSim hari ke-1.
+  function petaLimpahan(ref, tetangga, opts = {}) {
+    const hari = opts.hari ?? 1;
+    const base = petaSim(ref, { ...opts, hari: 1 });
+    const K = (s) => String(s).toUpperCase().trim();
+    const adj = {};
+    Object.entries(tetangga).forEach(([k, v]) => { adj[K(k)] = v.map(K); });
+    const rows = base.data.map((d) => ({ d, id: K(d.kelurahan), ikut: !!adj[K(d.kelurahan)],
+      kap: d.kap_total, tim: d.timbulan_harian, pile: 0, inflow: 0, masuk: 0, kritis: false, hariKritis: null }));
+    const by = Object.fromEntries(rows.map((r) => [r.id, r]));
+    const rasioOf = (r) => (r.kap === 0 ? Infinity : roundR(r.pile / r.kap, 3));
+
+    for (let day = 1; day <= hari; day++) {
+      const next = {};
+      rows.forEach((r) => {
+        if (!r.ikut) return;
+        const load = r.tim + r.inflow;
+        const sisa = Math.max(0, load - Math.min(load, r.kap));
+        r.pile += sisa > 1e-9 ? sisa : 0;
+        if (!r.kritis && rasioOf(r) >= 1) { r.kritis = true; r.hariKritis = day; }
+        if (r.kritis && r.pile > r.kap) {
+          const lebih = r.pile - r.kap;
+          const tuju = adj[r.id].map((i) => by[i]).filter((y) => y && !y.kritis);
+          if (tuju.length) {
+            r.pile = r.kap;
+            tuju.forEach((y) => { next[y.id] = (next[y.id] || 0) + lebih / tuju.length; });
+          }
+        }
+      });
+      rows.forEach((r) => { if (r.ikut) { r.inflow = next[r.id] || 0; r.masuk += r.inflow; } });
+    }
+
+    const data = rows.map((r) => {
+      if (!r.ikut) {
+        const v = petaSim(ref, { ...opts, hari }).data.find((x) => x.kelurahan === r.d.kelurahan);
+        return { ...v, limpahan_masuk: 0 };
+      }
+      const rasio = hari === 0 ? 0 : rasioOf(r);
+      const status = r.kritis ? 'KRITIS' : (rasio >= 0.7 ? 'SIAGA' : 'AMAN');
+      return {
+        kelurahan: r.d.kelurahan, kecamatan: r.d.kecamatan, populasi: r.d.populasi,
+        kap_efektif: r.d.kap_efektif, timbulan_harian: r.tim, kap_total: r.kap,
+        residual_harian: Math.max(0, r.tim - r.kap), akumulasi: r.pile,
+        rasio_isi: rasio === Infinity ? null : rasio, status_sim: status,
+        hari_kritis: r.hariKritis, limpahan_masuk: r.masuk,
+      };
+    });
+    const n = (s) => data.filter((d) => d.status_sim === s).length;
+    return { data, summary: { n_aman: n('AMAN'), n_siaga: n('SIAGA'), n_kritis: n('KRITIS') } };
+  }
+
+  // Hari pertama seluruh kelurahan KRITIS dengan model limpahan (null jika tidak tercapai dalam maxHari)
+  function hariSemuaKritis(ref, tetangga, opts = {}, maxHari = 60) {
+    for (let h = 1; h <= maxHari; h++) {
+      const s = petaLimpahan(ref, tetangga, { ...opts, hari: h }).summary;
+      if (s.n_aman + s.n_siaga === 0) return h;
+    }
+    return null;
+  }
+
+  return { petaSim, petaLimpahan, hariSemuaKritis, proyeksi, komposisi2026, financing, roundR, KAP_RDF, KAP_PSEL };
 }));

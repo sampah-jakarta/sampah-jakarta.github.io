@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261119">
 </head>
 <body class="home">
 
@@ -56,7 +56,7 @@
       <p class="stat-label">Sampah yang diolah</p>
     </article>
     <article class="stat">
-      <p class="stat-num">24 hari</p>
+      <p class="stat-num"><span data-k="hsemua">5</span> hari</p>
       <p class="stat-unit">skenario BAU</p>
       <p class="stat-label">Waktu hingga seluruh kelurahan kritis</p>
     </article>
@@ -119,10 +119,11 @@
       <div class="step" data-step="hari14">
         <div class="card">
           <p class="step-no">05 · Simulasi</p>
-          <h2>Hari ke-14</h2>
-          <p>Pada hari ke-14 jumlahnya menjadi <b data-k="k14">235</b> dari 267 kelurahan (88%). Kelurahan yang
-            tetap <span class="tag tag-aman">AMAN</span> adalah kelurahan yang kapasitas olah lokalnya sudah
-            mencukupi timbulan hariannya.</p>
+          <h2>Penuh dalam <span data-k="hsemua">5</span> hari</h2>
+          <p>Kelurahan yang sudah penuh melimpahkan sisanya ke kelurahan tetangga. Kelurahan yang semula masih
+            punya kapasitas ikut penuh menampung limpahan itu. Pada hari ke-<span data-k="hsemua">5</span>, seluruh
+            <b>267 kelurahan</b> berstatus <span class="tag tag-kritis">KRITIS</span>.</p>
+          <p class="day-counter">Hari ke-<b data-k="hcount">1</b> · <b data-k="kcount">172</b> kelurahan kritis</p>
         </div>
       </div>
 
@@ -176,7 +177,8 @@
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-  <script src="js/common.js"></script>
-  <script src="js/home.js"></script>
+  <script src="js/common.js?v=20261119"></script>
+  <script src="js/sim.js?v=20261119"></script>
+  <script src="js/home.js?v=20261119"></script>
 </body>
 </html>

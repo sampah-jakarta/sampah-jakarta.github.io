@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261119">
 </head>
 <body class="page">
 
@@ -58,7 +58,7 @@
     <section class="panel">
       <div class="panel-head">
         <h2>Status kelurahan per hari</h2>
-        <p>Akumulasi sampah jika sisa yang tidak terolah tidak bisa lagi dikirim ke Bantargebang.</p>
+        <p>Sisa sampah yang tidak terolah tidak bisa lagi dikirim ke Bantargebang. Kelurahan yang sudah penuh melimpahkan sisanya ke kelurahan tetangga.</p>
       </div>
       <div class="sim-map-layout">
         <div class="map-box map-tall"><div id="map-sim" class="map-fill"></div>
@@ -78,6 +78,7 @@
             <button class="btn-chip" id="stop">Ulang</button>
           </div>
           <p class="sim-interp" id="interp"></p>
+          <p class="semua-box" id="semua-box" data-k="semua"></p>
         </aside>
       </div>
     </section>
@@ -126,7 +127,8 @@
     <p class="source-note">Model: koefisien timbulan SNI 19-3964-1994 (0,76 kg/kapita/hari); kapasitas TPS 3R 25 ton/hari/unit
       dan bank sampah 22,21 kg/hari/unit (DLH–Bappeda 2026). TPS 3R dihitung per kecamatan lalu dibagi ke kelurahan menurut
       jumlah penduduk. Kapasitas RDF dan PSEL dialokasikan ke kelurahan yang kekurangan kapasitas, dengan faktor akses 72%.
-      Status: AMAN &lt; 70% ≤ SIAGA &lt; 100% ≤ KRITIS dari rasio tumpukan terhadap kapasitas.</p>
+      Kelurahan yang sudah KRITIS melimpahkan sisanya sama rata ke kelurahan tetangga (berbatasan langsung) yang belum KRITIS,
+      tiba keesokan harinya; belum ada batas kapasitas angkut. Kepulauan Seribu dihitung tanpa limpahan. Status: AMAN &lt; 70% ≤ SIAGA &lt; 100% ≤ KRITIS dari rasio tumpukan terhadap kapasitas.</p>
   </main>
 
   <footer class="footer">
@@ -136,9 +138,9 @@
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-  <script src="js/common.js"></script>
-  <script src="js/sim.js"></script>
-  <script src="js/skenario.js"></script>
-  <script src="js/simulasi.js"></script>
+  <script src="js/common.js?v=20261119"></script>
+  <script src="js/sim.js?v=20261119"></script>
+  <script src="js/skenario.js?v=20261119"></script>
+  <script src="js/simulasi.js?v=20261119"></script>
 </body>
 </html>

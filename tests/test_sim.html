@@ -71,6 +71,20 @@ const gz = async (f) => {
   });
   log(`peta: ${peta.length} kombinasi, ${rows} baris kelurahan`);
 
+  // Model limpahan: hari ke-1 belum ada limpahan masuk, jadi harus identik dengan petaSim (dan R)
+  const tetangga = await fetch('../data/tetangga.json').then((r) => r.json());
+  let nl = 0;
+  peta.filter(({ input }) => input.hari === 1).forEach(({ input }) => {
+    const a = Sim.petaSim(ref, input), b = Sim.petaLimpahan(ref, tetangga, input);
+    const sa = Object.fromEntries(a.data.map((d) => [d.kelurahan, d.status_sim]));
+    b.data.forEach((d) => { if (sa[d.kelurahan] !== d.status_sim) rep('limpahan hari-1 ' + JSON.stringify(input), d.kelurahan); });
+    nl++;
+  });
+  const bau = { sken_tps3r: 'eksisting', sken_upgrade: 'eksisting', sken_bs: 'eksisting', sken_fpsa: 'eksisting', sken_psel: 'eksisting' };
+  const hs = Sim.hariSemuaKritis(ref, tetangga, bau);
+  if (hs !== 5) rep('limpahan BAU', `seluruh kelurahan kritis hari ke-${hs}, diharapkan 5`);
+  log(`limpahan: ${nl} kombinasi hari ke-1 identik dengan model lama; BAU seluruh kritis hari ke-${hs}`);
+
   const st = document.getElementById('status');
   st.textContent = fails ? `${fails} perbedaan ditemukan` : 'SEMUA COCOK dengan hasil R';
   st.className = fails ? 'bad' : 'ok';

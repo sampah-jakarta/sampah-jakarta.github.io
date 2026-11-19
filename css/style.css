@@ -437,3 +437,5 @@ h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; }
 .ic-biaya    { background: #E8F2FB; color: #16334E; }
 .ic-dampak   { background: #FBE9E7; color: #C0392B; }
 .explore-icon + .explore-body { padding-top: 14px; }
+.semua-box { margin: 0; font-size: 13px; font-weight: 700; border-radius: 10px; padding: 10px 14px; background: #E8F5E9; color: var(--aman); } .semua-box.bad { background: #FCE9E9; color: var(--kritis); }
+.day-counter { margin-top: 10px !important; padding: 8px 12px; background: #FCE9E9; color: var(--kritis) !important; border-radius: 8px; font-size: 14px !important; }

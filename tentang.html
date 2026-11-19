@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261119">
 </head>
 <body class="page">
 
@@ -74,7 +74,8 @@
         <article class="method">
           <span class="sken-no">4</span><h3>Status kelurahan</h3>
           <p>Sisa harian yang tak terolah menumpuk setiap hari. Rasio tumpukan terhadap kapasitas menentukan status:
-            AMAN di bawah 70%, SIAGA 70–100%, KRITIS 100% ke atas. Kelurahan tanpa sisa harian tetap AMAN.</p>
+            AMAN di bawah 70%, SIAGA 70–100%, KRITIS 100% ke atas. Kelurahan yang sudah KRITIS melimpahkan sisanya sama
+            rata ke kelurahan tetangga yang belum KRITIS, sehingga kelurahan dengan kapasitas lebih ikut terisi.</p>
         </article>
         <article class="method">
           <span class="sken-no">5</span><h3>Pembiayaan</h3>
@@ -93,8 +94,9 @@
       <article class="panel">
         <div class="panel-head"><h2>Temuan utama</h2></div>
         <ul class="find-list">
-          <li><b>24 hari</b> sampai seluruh kelurahan kritis bila kondisi saat ini berlanjut tanpa Bantargebang.</li>
-          <li>Pada hari ke-14 skenario BAU, <b>235 dari 267</b> kelurahan kritis. Skenario moderat menurunkannya menjadi 89, maksimum menjadi 0.</li>
+          <li>Bila kondisi saat ini berlanjut tanpa Bantargebang, <b>172 kelurahan</b> kritis pada hari pertama dan
+            <b>seluruh 267 kelurahan</b> kritis pada <b>hari ke-5</b>, karena sisa sampah melimpah ke kelurahan tetangga.</li>
+          <li>Dengan skenario maksimum, tidak ada kelurahan yang kritis. Skenario moderat menahan limpahan sehingga sebagian kelurahan tetap aman.</li>
           <li>Kapasitas olah sampah organik baru <b>3,5%</b> dari kebutuhan, padahal organik hampir separuh timbulan.</li>
           <li>Kerugian bila tidak ditangani <b>Rp 17,7 T/tahun</b> (2026), naik menjadi Rp 34,1 T (2045).</li>
           <li>Skenario moderat menghemat sekitar <b>Rp 117 T</b> secara kumulatif dengan rasio manfaat-biaya 3,4.</li>
@@ -121,9 +123,10 @@
     <section class="panel">
       <div class="panel-head"><h2>Catatan dan keterbatasan</h2></div>
       <p class="body-text">Seluruh angka adalah estimasi untuk perencanaan kebijakan, bukan audit. Simulasi menganggap sisa sampah tidak bisa
-        lagi dikirim ke Bantargebang; kondisi nyata bisa berbeda karena pengangkutan lintas wilayah, pengolahan informal, dan perubahan
-        kebijakan. Enam kelurahan di Kepulauan Seribu tidak ditampilkan di peta. Data dan perhitungan di situs ini sama dengan dashboard
-        kajian sebelumnya dan telah diuji ulang untuk seluruh kombinasi skenario.</p>
+        lagi dikirim ke Bantargebang dan dilimpahkan ke kelurahan tetangga tanpa batas kapasitas angkut; kondisi nyata bisa berbeda
+        karena keterbatasan armada, pembuangan liar, pengolahan informal, dan perubahan kebijakan. Enam kelurahan di Kepulauan Seribu tidak ditampilkan di peta. Proyeksi, pembiayaan, dan biaya inaksi di situs ini sama
+        dengan dashboard kajian sebelumnya dan telah diuji ulang untuk seluruh kombinasi skenario. Peta status kelurahan memakai model
+        limpahan (pembaruan November 2026); hasil hari pertama identik dengan model sebelumnya.</p>
       <p class="body-text">Data situs ini tersedia dalam format JSON dan GeoJSON di <a href="https://github.com/sampah-jakarta/sampah-jakarta.github.io/tree/main/data" target="_blank" rel="noopener">repositori GitHub situs ini</a> dan dapat dipakai ulang
         dengan mencantumkan sumber aslinya.</p>
     </section>
@@ -134,6 +137,6 @@
     <p class="small">Seluruh angka bersifat estimasi untuk perencanaan kebijakan.</p>
   </footer>
 
-  <script src="js/common.js"></script>
+  <script src="js/common.js?v=20261119"></script>
 </body>
 </html>

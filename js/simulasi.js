@@ -3,8 +3,8 @@
 const KEYS = ['timbulan', 'tps3r', 'bs', 'upgrade', 'fpsa', 'psel'];
 const setK = (k, v) => document.querySelectorAll(`[data-k="${k}"]`).forEach((el) => { el.textContent = v; });
 
-Promise.all([loadData('sim_ref.json'), loadData('batas_kelurahan.geojson'), loadData('indicators.json')])
-  .then(([ref, kel, inds]) => {
+Promise.all([loadData('sim_ref.json'), loadData('batas_kelurahan.geojson'), loadData('indicators.json'), loadData('tetangga.json')])
+  .then(([ref, kel, inds, tetangga]) => {
     const totalTimbulan = inds.find((r) => r.indikator === 'total_timbulan')?.nilai ?? 9058.9;
     kel.features.forEach((f, i) => { f.id = i; });
     const kelIndex = Object.fromEntries(kel.features.map((f, i) => [keyName(f.properties.nama), i]));
@@ -16,20 +16,24 @@ Promise.all([loadData('sim_ref.json'), loadData('batas_kelurahan.geojson'), load
 
     const updateMap = () => {
       if (!mapReady) return;
-      const res = Sim.petaSim(ref, { hari, sken_tps3r: sken.tps3r, sken_upgrade: sken.upgrade, sken_bs: sken.bs, sken_fpsa: sken.fpsa, sken_psel: sken.psel });
+      const opts = { sken_tps3r: sken.tps3r, sken_upgrade: sken.upgrade, sken_bs: sken.bs, sken_fpsa: sken.fpsa, sken_psel: sken.psel };
+      const res = Sim.petaLimpahan(ref, tetangga, { hari, ...opts });
       kel.features.forEach((f) => { f.properties.status = 'NA'; });
       res.data.forEach((d) => {
         const i = kelIndex[keyName(d.kelurahan)];
         if (i === undefined) return;
         Object.assign(kel.features[i].properties, {
           status: d.status_sim, kecamatan: d.kecamatan, timbulan: d.timbulan_harian, kap: d.kap_total,
-          residual: d.residual_harian, akumulasi: d.akumulasi, hari_kritis: d.hari_kritis,
+          residual: d.residual_harian, akumulasi: d.akumulasi, hari_kritis: d.hari_kritis, masuk: d.limpahan_masuk,
         });
       });
       map.getSource('kel').setData(kel);
       const s = res.summary;
       setK('n_aman', fmt(s.n_aman)); setK('n_siaga', fmt(s.n_siaga)); setK('n_kritis', fmt(s.n_kritis));
       document.getElementById('interp').textContent = interpretasi(hari, s);
+      const hs = Sim.hariSemuaKritis(ref, tetangga, opts);
+      setK('semua', hs ? `Seluruh kelurahan kritis pada hari ke-${hs}` : 'Tidak semua kelurahan menjadi kritis pada skenario ini');
+      document.getElementById('semua-box').classList.toggle('bad', !!hs);
     };
 
     const updateProj = () => {
@@ -90,12 +94,12 @@ Promise.all([loadData('sim_ref.json'), loadData('batas_kelurahan.geojson'), load
         const p = e.features[0].properties;
         const row = (l, v) => `<tr><td>${l}</td><td>${v}</td></tr>`;
         const n = (v, u) => (v == null || v === 'null' ? '–' : `${fmt(v, 1)} ${u}`);
-        const hk = p.hari_kritis == null || p.hari_kritis === 'null' ? (p.residual > 0 ? '–' : 'tidak pernah') : `${p.hari_kritis} hari lagi`;
+        const hk = p.hari_kritis == null || p.hari_kritis === 'null' ? 'belum' : `hari ke-${p.hari_kritis}`;
         new maplibregl.Popup({ maxWidth: '270px' }).setLngLat(e.lngLat).setHTML(
           `<div class="pop"><b>${p.nama}</b><span class="tag tag-${String(p.status).toLowerCase()}">${p.status}</span>
           <table>${row('Kecamatan', p.kecamatan || '–')}${row('Timbulan', n(p.timbulan, 'ton/hari'))}
           ${row('Kapasitas total', n(p.kap, 'ton/hari'))}${row('Sisa tak terolah', n(p.residual, 'ton/hari'))}
-          ${row('Tumpukan', n(p.akumulasi, 'ton'))}${row('Menjadi kritis', hk)}</table></div>`).addTo(map);
+          ${row('Limpahan diterima', n(p.masuk, 'ton'))}${row('Tumpukan', n(p.akumulasi, 'ton'))}${row('Menjadi kritis', hk)}</table></div>`).addTo(map);
       });
     });
 
@@ -121,9 +125,9 @@ function interpretasi(hari, s) {
   const pk = Math.round(s.n_kritis / total * 100);
   if (hari === 0) return `Hari ke-0: sistem dimulai dalam kondisi bersih. Semua ${total} kelurahan AMAN karena tumpukan sampah belum terjadi.`;
   if (s.n_kritis === 0) return `Hari ke-${hari}: tidak ada kelurahan KRITIS. Kapasitas TPS lokal dan fasilitas kota (RDF/PSEL) pada skenario ini mencukupi. ${s.n_aman} kelurahan AMAN, ${s.n_siaga} SIAGA.`;
-  if (pk >= 70) return `Hari ke-${hari}: ${s.n_kritis} dari ${total} kelurahan (${pk}%) KRITIS. Kapasitas TPS terlampaui dan kapasitas RDF/PSEL belum cukup menutup kekurangannya.`;
-  if (pk >= 30) return `Hari ke-${hari}: ${s.n_kritis} kelurahan (${pk}%) KRITIS, ${s.n_siaga} SIAGA, ${s.n_aman} AMAN. Kelurahan KRITIS adalah yang kekurangannya melebihi alokasi kapasitas RDF/PSEL pada skenario ini.`;
-  return `Hari ke-${hari}: ${s.n_aman} kelurahan AMAN, ${s.n_siaga} SIAGA, ${s.n_kritis} KRITIS. Kelurahan yang masih KRITIS umumnya punya kekurangan terbesar yang belum terjangkau kapasitas kota.`;
+  if (pk >= 70) return `Hari ke-${hari}: ${s.n_kritis} dari ${total} kelurahan (${pk}%) KRITIS. Kapasitas terlampaui dan limpahannya ikut memenuhi kelurahan tetangga.`;
+  if (pk >= 30) return `Hari ke-${hari}: ${s.n_kritis} kelurahan (${pk}%) KRITIS, ${s.n_siaga} SIAGA, ${s.n_aman} AMAN. Sisa dari kelurahan yang penuh mengalir ke tetangganya, sehingga jumlah kelurahan KRITIS terus bertambah.`;
+  return `Hari ke-${hari}: ${s.n_aman} kelurahan AMAN, ${s.n_siaga} SIAGA, ${s.n_kritis} KRITIS. Kelurahan dengan kapasitas lebih masih mampu menampung limpahan dari tetangganya.`;
 }
 
 function targets(res, d) {
